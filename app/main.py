@@ -59,7 +59,7 @@ def move():
      #   direction = 'up'
 
     playerPos = data['snakes'[0]['coords']] + data['snakes'[1]['coords']] + data['snakes'[2]['coords']] + data['snakes'[3]['coords']] 
-    obstacles = [-1, -1] + [board_width + 1, -1] + [board_width + 1, board_height + 1] + [-1, board_height + 1]
+    obstacles = [0, 0] + [board_width, 0] + [board_width, board_height] + [0, board_height]
 
     def pathlen (self, a, b):
         return int( ((a[0]-b[0])**2 + (a[1]-b[1])**2 )**0.5)
@@ -78,8 +78,7 @@ def move():
 
 
     olddir = currentdir
-    #position = data['snakes'[0]['coords'][0]]
-    position=[ourSnakeX, ourSnakeY]
+    position = data['snakes'[0]['coords'][0]]
 
     complement = [('up', 'down'), ('down', 'up'), ('right', 'left'), ('left', 'right')]
     invaliddir = [x for (x, y) in complement if y == olddir]
