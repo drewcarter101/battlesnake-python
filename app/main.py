@@ -19,7 +19,7 @@ def start():
         bottle.request.urlparts.scheme,
         bottle.request.urlparts.netloc
     )
-
+    
     # TODO: Do things with data
 
     return {
@@ -33,17 +33,35 @@ def start():
 @bottle.post('/move')
 def move():
     data = bottle.request.json
+    ourSnakeX = data['snakes'[0]['coords'][0][0]]
+    ourSnakeY = data['snakes'[0]['coords'][0][1]]
 
-    # TODO: Do things with data
-    directions = ['up', 'down', 'left', 'right']
+    rightSpace = board_width - ourSnakeX
+    leftSpace = 0 - ourSnakeX
+    downSpace = board_height - ourSnakeY
+    upSpace = 0 - ourSnakeY
+
+    #enemyDistanceLeft
+    #enemyDistanceRight
+    #enemyDistanceUp
+    #enemyDistanceDown
+
+    if(upSpace == 0):
+        direction='left'
+    if(leftSpace==0):
+        direction='up'
+    if(downSpace==0):
+        direction='left'
+    if(rightSpace==0):
+        direction='up'
 
     return {
-        'move': random.choice(directions),
-        'taunt': 'battlesnake-python!'
+        'move': direction,
+        'taunt': 'Everything is Awesome!'
     }
 
 
 # Expose WSGI app (so gunicorn can find it)
 application = bottle.default_app()
 if __name__ == '__main__':
-    bottle.run(application, host=os.getenv('IP', '0.0.0.0'), port=os.getenv('PORT', '8080'))
+    bottle.run(application, host=os.getenv('IP', '134.87.130.164'), port=os.getenv('PORT', '8080'))
