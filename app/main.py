@@ -12,11 +12,11 @@ def static(path):
 
 
 @bottle.post('/start')
-def start():
+def start(self):
     data = bottle.request.json
     game_id = data['game_id']
-    board_width = data['width']
-    board_height = data['height']
+    self.board_width = data['width']
+    self.board_height = data['height']
 
     head_url = '%s://%s/static/head.png' % (
         bottle.request.urlparts.scheme,
@@ -27,14 +27,14 @@ def start():
 
     return {
         'color': '#00FF00',
-        'taunt': '{} ({}x{})'.format(game_id, board_width, board_height),
+        'taunt': '{} ({}x{})'.format(game_id, self.board_width, self.board_height),
         'head_url': head_url,
         'name': 'battlesnake-python'
     }
 
 
 @bottle.post('/move')
-def move():
+def move(self):
     data = bottle.request.json
 
     directions = ['up', 'down', 'right', 'left']
@@ -44,9 +44,9 @@ def move():
     ourSnakeX = data['snakes'[0]['coords'][0][0]]
     ourSnakeY = data['snakes'[0]['coords'][0][1]]
 
-    rightSpace = board_width - ourSnakeX
+    rightSpace = self.board_width - ourSnakeX
     leftSpace = 0 - ourSnakeX
-    downSpace = board_height - ourSnakeY
+    downSpace = self.board_height - ourSnakeY
     upSpace = 0 - ourSnakeY
 
     #if upSpace == 0:
@@ -58,8 +58,13 @@ def move():
     #if rightSpace == 0:
      #   direction = 'up'
 
+    topWall = [(x, 0) for x in range(self.board_width + 1)]
+    leftWall = [(0, y) for y in range(self.board_height + 1)]
+    rightWall = [(self.board_width, y) for y in range(self.board_height + 1)]
+    bottomWall = [(x, self.board_height) for x in range(self.board_width + 1)]
+
     playerPos = data['snakes'[0]['coords']] + data['snakes'[1]['coords']] + data['snakes'[2]['coords']] + data['snakes'[3]['coords']] 
-    obstacles = [0, 0] + [board_width, 0] + [board_width, board_height] + [0, board_height]
+    obstacles = topWall + leftWall + rightWall + bottomWall
 
     def pathlen (self, a, b):
         return int( ((a[0]-b[0])**2 + (a[1]-b[1])**2 )**0.5)
